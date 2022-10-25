@@ -1,0 +1,45 @@
+import csv
+from email import header
+
+# header du csv
+HEADER = ['col1','col2','col3','col4']
+
+# génère le fichier csv de 10 000 lignes avec 4 colone 
+def generate_big_csv():
+    with open('csv/data/big_csv.csv', 'w') as file:
+        # permet de generer un csv via un dict (il attend des clé)
+        writer_dict = csv.DictWriter(file, header = HEADER)
+        for i in range(0,10000):
+            line = {}
+            line['col1'] = 'line '+ str(i) 
+            line['col2'] = 'line '+ str(i) 
+            line['col3'] = 'line '+ str(i) 
+            line['col4'] = 'line '+ str(i)
+            writer_dict.writerow(line)
+    file.close()
+
+# écris un fichier csv en prenant un entier pour le numero de fichier et la ligne a écrire (list)
+def write_csv(y,list):
+    with open('csv/data/small_csv_'+str(y)+'.csv', 'w') as file_write:
+        writer = csv.writer(file_write)
+        for line in list:
+            writer.writerow(line)
+    file_write.close()
+
+def read_big_csv():
+    compte_ligne=0
+    compte_csv=1
+    with open('csv/data/big_csv.csv') as file_read:
+        csv_read = csv.reader(file_read)
+        lines = []
+        for row in csv_read:
+            lines.append(row)
+            if(compte_ligne == 999):
+                write_csv(compte_csv,lines)
+                lines = []
+                compte_csv+=1
+                compte_ligne=0
+            compte_ligne+=1
+
+generate_big_csv()
+read_big_csv()
